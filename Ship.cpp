@@ -11,16 +11,18 @@
 
 #include "Display.h"
 
-Ship::Ship(unsigned width, unsigned height, const Display &display)
-	: m_bitmap{al_create_bitmap(width, height)}
-	, m_display{display}
+Ship::Ship(float width, float height, const Display &display)
+	: m_bitmap{ al_create_bitmap(width, height) }
+	, m_width{ width }
+	, m_height{ height }
+	, m_display{ display }
 {
 	using namespace std;
 	Shape points = {
-		make_pair(width / 2.0f, 0.0),
-		make_pair(width, height),
+		make_pair(width / 2.0f, 0.0f),
+		make_pair(static_cast<float>(width), static_cast<float>(height)),
 		make_pair(width / 2.0f, height / 1.5f),
-		make_pair(0.0f , height)
+		make_pair(0.0f , static_cast<float>(height))
 	};
 
 	al_set_target_bitmap(m_bitmap);
@@ -45,12 +47,25 @@ Ship::~Ship()
 
 void Ship::show() const
 {
-	al_draw_bitmap(m_bitmap, 50, 50, 0);
+	al_draw_rotated_bitmap(m_bitmap, m_width/2, m_height/2, m_pos_x, m_pos_y, m_rotation, 0);
 }
 
 void Ship::update(float delta_time, ALLEGRO_KEYBOARD_STATE &keyboard_state)
 {
-
+	if (al_key_down(&keyboard_state, ALLEGRO_KEY_W)) {
+		m_pos_x += 500.0 * delta_time * std::sin(m_rotation);
+		m_pos_y -= 500.0 * delta_time * std::cos(m_rotation);
+	}
+	if (al_key_down(&keyboard_state, ALLEGRO_KEY_S)) {
+		m_pos_x -= 500.0 * delta_time * std::sin(m_rotation);
+		m_pos_y += 500.0 * delta_time * std::cos(m_rotation);
+	}
+	if (al_key_down(&keyboard_state, ALLEGRO_KEY_D)) {
+		m_rotation += 10.0 * delta_time;
+	}
+	if (al_key_down(&keyboard_state, ALLEGRO_KEY_A)) {
+		m_rotation -= 10.0 * delta_time;
+	}
 }
 
 

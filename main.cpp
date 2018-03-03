@@ -10,6 +10,7 @@
 
 #include "Ship.h"
 #include "Display.h"
+#include "Game.h"
 
 void init_allegro() {
 	if (!al_init()) {
@@ -75,52 +76,12 @@ int main(int argc, char **argv) {
 	constexpr auto fps_60 = 1.0 / 60.0;
 	const auto timer = al_create_timer(fps_60);
 
-	al_register_event_source(event_queue, al_get_display_event_source(display));
-	al_register_event_source(event_queue, al_get_keyboard_event_source());
-	al_register_event_source(event_queue, al_get_mouse_event_source());
-	al_register_event_source(event_queue, al_get_timer_event_source(timer));
-	al_clear_to_color(al_map_rgb(0, 0, 0));
-	al_start_timer(timer);
 
-	al_flip_display();
 
-	const auto &ship = Ship(30, 50, *display);
-
-	while (1) {
-		ALLEGRO_EVENT ev;
-		al_wait_for_event(event_queue, &ev);
-
-		if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE ) {
-			break;
-		}
-
-		if (ev.type == ALLEGRO_EVENT_TIMER) {
-			al_clear_to_color(al_map_rgb(0, 0, 0));
-			/*al_draw_bitmap(cat_bitmap, cat_pos_x, cat_pos_y, 0);
-			al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, 0, "Hello World");*/
-
-			ALLEGRO_KEYBOARD_STATE keyboard_state;
-
-			al_get_keyboard_state(&keyboard_state);
-			if (al_key_down(&keyboard_state, ALLEGRO_KEY_RIGHT))
-				cat_pos_x += 1;
-
-			if (al_key_down(&keyboard_state, ALLEGRO_KEY_LEFT)) {
-				cat_pos_x -= 1;
-			}
-
-			if (al_key_down(&keyboard_state, ALLEGRO_KEY_DOWN)) {
-				cat_pos_y += 1;
-			}
-
-			if (al_key_down(&keyboard_state, ALLEGRO_KEY_UP)) {
-				cat_pos_y -= 1;
-			}
-		}
-		ship.show();
-		al_flip_display();
-		
-	}
+	const auto &ship = Ship(30, 50, display);
+	
+	Game game;
+	game.start_game();
 
 	al_uninstall_keyboard();
 	al_destroy_timer(timer);
