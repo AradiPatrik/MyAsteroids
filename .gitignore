@@ -1,0 +1,7 @@
+Debug/*
+*.ttf
+*.txt
+*.jpg
+*.wav
+*.vcxproj
+*.vcxproj.filters
