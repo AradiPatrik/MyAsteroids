@@ -5,3 +5,4 @@ Debug/*
 *.wav
 *.vcxproj
 *.vcxproj.filters
+*.log
